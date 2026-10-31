@@ -1,0 +1,4 @@
+model,weights,epochs,imgsz,precision,recall,map50,map50_95,validation_seconds
+YOLOv8n_baseline_320_ep30,runs\detect\surfacescope_baseline\weights\best.pt,30,320,0.647695,0.671458,0.716778,0.380463,32.17
+YOLOv8n_512_ep30,runs\detect\surfacescope_imgsz512\weights\best.pt,30,512,0.615139,0.696412,0.733923,0.37723,24.5
+YOLOv8n_512_ep50,runs\detect\surfacescope_imgsz512-2\weights\best.pt,50,512,0.726994,0.682831,0.734019,0.384884,24.1

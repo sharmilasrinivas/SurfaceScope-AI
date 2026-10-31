@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Dataset
+data/
+
+# MLflow
+mlruns/
+mlflow.db*
+
+# Training outputs
+runs/
+weights/
+
+# Model checkpoints
+*.pt
+!models/
+!models/best.pt
+
+# Sample images and visual analysis
+sample.jpg
+reports/**/*.jpg
+
+# Temporary files
+*.log
+*.pyc
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+reports/difficult_class_comparison/*.jpg
