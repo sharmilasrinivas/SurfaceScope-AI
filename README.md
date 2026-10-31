@@ -47,9 +47,6 @@ inference, and an interactive Streamlit web application.
 4.  Pitted surface
 5.  Rolled-in scale
 6.  Scratches
-
-## Model and dataset
-
   
 ## Model and Dataset Configuration
 
@@ -109,7 +106,6 @@ Refer to the CSV reports in `reports/` for additional analysis.
 
 > **Note:** These metrics represent validation performance on the prepared NEU-DET validation dataset. They are not independent industrial test results.
 
-
 ## Application workflow
 
 1.  Upload a steel surface image.
@@ -127,9 +123,6 @@ categories. Results vary with the input image and confidence threshold.
 **Live demo:** https://surfacescope-ai.streamlit.app/
 
 ## Technology stack
-
-  
-## Technology Stack
 
 | Area | Technologies |
 |---|---|
