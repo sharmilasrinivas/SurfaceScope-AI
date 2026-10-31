@@ -43,17 +43,21 @@ inference, and an interactive Streamlit web application.
 
 ## Model and dataset
 
-  Item                                       Configuration
-  ------------------------------------------ ------------------------------------------
-  Model                                      YOLOv8n
-  Task                                       Object detection
-  Dataset                                    NEU-DET steel surface defect dataset
-  Input size                                 512 × 512
-  Selected checkpoint                        `models/best.pt`
-  Default application confidence threshold   0.25
-  Local development Python                   3.10.11
-  Local GPU                                  NVIDIA GeForce RTX 3050 Laptop GPU
-  Cloud deployment                           Streamlit Community Cloud, CPU inference
+  
+## Model and Dataset Configuration
+
+| Item | Configuration |
+|---|---|
+| Model | YOLOv8n |
+| Task | Object Detection |
+| Dataset | NEU-DET Steel Surface Defect Dataset |
+| Input Size | 512 × 512 |
+| Selected Checkpoint | `models/best.pt` |
+| Default Application Confidence Threshold | 0.25 |
+| Local Development Python | 3.10.11 |
+| Local GPU | NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM) |
+| Cloud Deployment | Streamlit Community Cloud (CPU Inference) |
+
 
 The prepared YOLO-format dataset used in the recorded experiment
 contains **1,439 training images** and **360 validation images**,
@@ -117,19 +121,23 @@ categories. Results vary with the input image and confidence threshold.
 
 ## Technology stack
 
-  Area                     Technologies
-  ------------------------ ---------------------------
-  Programming language     Python
-  Object detection         Ultralytics YOLOv8n
-  Deep learning            PyTorch, Torchvision
-  Computer vision          OpenCV, Pillow
-  Data analysis            Pandas
-  Interactive interface    Streamlit
-  Experiment tracking      MLflow
-  Dataset                  NEU-DET
-  Local GPU acceleration   NVIDIA CUDA, RTX 3050
-  Version control          Git and GitHub
-  Public demo hosting      Streamlit Community Cloud
+  
+## Technology Stack
+
+| Area | Technologies |
+|---|---|
+| Programming Language | Python |
+| Object Detection | Ultralytics YOLOv8n |
+| Deep Learning | PyTorch, Torchvision |
+| Computer Vision | OpenCV, Pillow |
+| Data Analysis | Pandas |
+| Interactive Interface | Streamlit |
+| Experiment Tracking | MLflow |
+| Dataset | NEU-DET |
+| Local GPU Acceleration | NVIDIA CUDA, RTX 3050 |
+| Version Control | Git and GitHub |
+| Public Demo Hosting | Streamlit Community Cloud |
+
 
 ## Repository structure
 
@@ -253,11 +261,17 @@ output directory.
 MLflow was used during local experimentation to record evaluation
 metrics and artifacts and to register the selected model.
 
-  Registry field     Recorded value
-  ------------------ ------------------------
-  Registered model   `SurfaceScope-YOLOv8n`
-  Version            `1`
-  Status             `READY`
+
+## MLflow Model Registry
+
+The selected YOLOv8n model was registered and verified using MLflow Model Registry.
+
+| Registry Field | Recorded Value |
+|---|---|
+| Registered Model | `SurfaceScope-YOLOv8n` |
+| Model Version | `1` |
+| Registration Status | `READY` |
+
 
 The local tracking database was `mlflow.db`, with experiment artifacts
 stored under `mlruns/`. These local files are excluded from GitHub.
@@ -350,7 +364,7 @@ separately provisioned GPU-enabled service.
 
 ------------------------------------------------------------------------
 
-**SurfaceScope AI --- Intelligent Steel Surface Defect Detection**
+**SurfaceScope AI - Intelligent Steel Surface Defect Detection**
 
 -   GitHub: https://github.com/sharmilasrinivas/SurfaceScope-AI
 -   Live demo: https://surfacescope-ai.streamlit.app/
