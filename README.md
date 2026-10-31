@@ -2,6 +2,13 @@
 
 ### Intelligent Steel Surface Defect Detection
 
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-red?logo=streamlit)](https://surfacescope-ai.streamlit.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/sharmilasrinivas/SurfaceScope-AI)
+[![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)](https://www.python.org/)
+[![YOLOv8](https://img.shields.io/badge/Model-YOLOv8n-green)](https://github.com/ultralytics/ultralytics)
+
+
 **SurfaceScope AI** is a computer-vision application that detects and
 localizes steel surface defects using a YOLOv8n object-detection model
 trained on the NEU-DET dataset. It combines model evaluation, MLflow
