@@ -1,172 +1,345 @@
 # SurfaceScope AI
 
-YOLOv8-based steel surface defect detection using the NEU-DET dataset, with model evaluation and MLflow experiment tracking.
+### Intelligent Steel Surface Defect Detection
 
-## Project overview
+**SurfaceScope AI** is a computer-vision application that detects and
+localizes steel surface defects using a YOLOv8n object-detection model
+trained on the NEU-DET dataset. It combines model evaluation, MLflow
+experiment tracking and model registration, GPU-accelerated local
+inference, and an interactive Streamlit web application.
 
-SurfaceScope AI detects and localizes six categories of steel surface defects in images:
+-   **Live application:** https://surfacescope-ai.streamlit.app/
+-   **GitHub repository:**
+    https://github.com/sharmilasrinivas/SurfaceScope-AI
 
-- Crazing
-- Inclusion
-- Patches
-- Pitted surface
-- Rolled-in scale
-- Scratches
+> **Research/demo note:** The reported metrics are validation results on
+> the prepared NEU-DET validation split. They do not guarantee
+> performance on unseen factory production lines.
 
-The project trains an object-detection model, evaluates validation performance, compares experiments, and uses MLflow to track results and register the selected model.
+## Features
 
-> **Research/demo note:** Results reported here are validation results on the prepared NEU-DET dataset. They do not guarantee performance on unseen factory production lines.
+-   Upload steel surface images through an interactive Streamlit
+    interface.
+-   Detect and localize six steel defect categories.
+-   Display annotated images with bounding boxes and confidence scores.
+-   Show total detections, defect-category distribution, and detection
+    details.
+-   Adjust the confidence threshold.
+-   Run local inference using a CUDA-enabled NVIDIA GPU when available,
+    with CPU fallback.
+-   Review model-comparison, confidence-threshold, and difficult-class
+    analysis reports.
+-   Track experiments and register the selected model with MLflow.
+-   Access a public demonstration through Streamlit Community Cloud.
 
-## Selected model
+## Supported defect categories
 
-- **Model:** YOLOv8n
-- **Selected checkpoint:** `runs/detect/surfacescope_imgsz512-2/weights/best.pt`
-- **Input size:** 512 × 512
-- **Prediction confidence threshold:** 0.25
-- **Prediction device:** CUDA GPU (`device=0`) in the current local setup
-- **MLflow registered model:** `SurfaceScope-YOLOv8n`
-- **Registered version:** 1 (`READY`)
+1.  Crazing
+2.  Inclusion
+3.  Patches
+4.  Pitted surface
+5.  Rolled-in scale
+6.  Scratches
 
-## Dataset and preprocessing
+## Model and dataset
 
-The project uses the NEU-DET steel surface defect dataset prepared in YOLO format.
+  Item                                       Configuration
+  ------------------------------------------ ------------------------------------------
+  Model                                      YOLOv8n
+  Task                                       Object detection
+  Dataset                                    NEU-DET steel surface defect dataset
+  Input size                                 512 × 512
+  Selected checkpoint                        `models/best.pt`
+  Default application confidence threshold   0.25
+  Local development Python                   3.10.11
+  Local GPU                                  NVIDIA GeForce RTX 3050 Laptop GPU
+  Cloud deployment                           Streamlit Community Cloud, CPU inference
 
-The processed dataset is expected at:
+The prepared YOLO-format dataset used in the recorded experiment
+contains **1,439 training images** and **360 validation images**,
+covering six defect categories. The dataset itself is not included in
+this repository. Obtain it separately and configure the dataset paths
+before reproducing training.
 
-```text
-data/processed/neu_yolo/
-├── data.yaml
-├── images/
-│   ├── train/
-│   └── validation/
-└── labels/
-    ├── train/
-    └── validation/
+## Validation performance
+
+The selected 512-pixel model achieved these recorded validation results:
+
+  Metric                   Score
+  ------------ -----------------
+  Precision      0.7270 (72.70%)
+  Recall         0.6828 (68.28%)
+  mAP@50         0.7340 (73.40%)
+  mAP@50--95     0.3849 (38.49%)
+
+### Class-wise validation results
+
+  Defect class        Precision   Recall   mAP@50   mAP@50--95
+  ----------------- ----------- -------- -------- ------------
+  Crazing                 0.672    0.342    0.530        0.227
+  Inclusion               0.758    0.805    0.828        0.463
+  Patches                 0.861    0.891    0.926        0.576
+  Pitted surface          0.906    0.690    0.798        0.415
+  Rolled-in scale         0.578    0.492    0.516        0.227
+  Scratches               0.584    0.876    0.807        0.400
+
+Performance varies across defect categories. Crazing and rolled-in scale
+were comparatively challenging in this validation evaluation. See the
+CSV reports in `reports/` for additional analysis. These metrics are not
+independent industrial test results.
+
+## Application workflow
+
+1.  Upload a steel surface image.
+2.  The application loads the selected YOLOv8n checkpoint.
+3.  The image is passed to the detector at 512-pixel inference size.
+4.  The model returns predicted classes, confidence scores, and bounding
+    boxes.
+5.  The application displays the annotated image and detection summary.
+6.  Download the annotated result.
+
+The deployed application has been tested with multiple input images. In
+one documented cloud test, it detected three objects across two
+categories. Results vary with the input image and confidence threshold.
+
+**Live demo:** https://surfacescope-ai.streamlit.app/
+
+## Technology stack
+
+  Area                     Technologies
+  ------------------------ ---------------------------
+  Programming language     Python
+  Object detection         Ultralytics YOLOv8n
+  Deep learning            PyTorch, Torchvision
+  Computer vision          OpenCV, Pillow
+  Data analysis            Pandas
+  Interactive interface    Streamlit
+  Experiment tracking      MLflow
+  Dataset                  NEU-DET
+  Local GPU acceleration   NVIDIA CUDA, RTX 3050
+  Version control          Git and GitHub
+  Public demo hosting      Streamlit Community Cloud
+
+## Repository structure
+
+``` text
+SurfaceScope-AI/
+├── app.py
+├── packages.txt
+├── requirements.txt
+├── README.md
+├── .gitignore
+├── models/
+│   └── best.pt
+├── notebooks/
+│   ├── 01_dataset_exploration.ipynb
+│   ├── 02_annotation_analysis.ipynb
+│   ├── 03_dataset_validation.ipynb
+│   ├── 04_annotation_quality.ipynb
+│   └── 05_annotation_audit.ipynb
+├── reports/
+│   ├── confidence_thresholds.csv
+│   ├── difficult_class_error_analysis.csv
+│   ├── difficult_class_error_analysis_conf015.csv
+│   ├── difficult_class_error_analysis_conf020.csv
+│   ├── difficult_class_error_analysis_conf025.csv
+│   ├── model_comparison.csv
+│   ├── validation_crazing_images.txt
+│   └── validation_rolled-in_scale_images.txt
+└── src/
+    ├── predict.py
+    ├── train.py
+    ├── train_imgsz512.py
+    ├── train_imgsz512_ep50.py
+    ├── evaluate_baseline.py
+    ├── evaluate_imgsz512.py
+    ├── evaluate_difficult_classes.py
+    ├── evaluate_thresholds.py
+    ├── compare_models.py
+    ├── prepare_yolo_dataset.py
+    └── additional experiment and analysis scripts
 ```
 
-The recorded split contains 1,439 training images and 360 validation images. The six defect categories are represented in the dataset configuration. Check `data/processed/neu_yolo/data.yaml` for the class names and dataset paths used by the local training setup.
+The repository excludes the dataset, local virtual environment, MLflow
+database, training output directories, and experimental model
+checkpoints. The selected deployment checkpoint is included at
+`models/best.pt`.
 
-## Validation results
+## Run locally
 
-The selected 512-pixel model achieved the following recorded validation metrics:
+### 1. Clone the repository
 
-| Metric | Result |
-|---|---:|
-| Precision | 0.7270 (72.70%) |
-| Recall | 0.6828 (68.28%) |
-| mAP@50 | 0.7340 (73.40%) |
-| mAP@50–95 | 0.3849 (38.49%) |
+``` bash
+git clone https://github.com/sharmilasrinivas/SurfaceScope-AI.git
+cd SurfaceScope-AI
+```
 
-These figures summarize validation performance. mAP@50–95 is stricter than mAP@50 because it averages performance over a range of intersection-over-union thresholds.
+### 2. Create and activate a virtual environment
 
-## Model comparison and analysis
+Windows PowerShell:
 
-Existing analysis outputs are stored in `reports/`, including:
-
-- `model_comparison.csv` — comparison of evaluated model configurations
-- `confidence_thresholds.csv` — confidence-threshold analysis
-- `difficult_class_error_analysis.csv` and the confidence-specific variants — difficult-class error analysis
-- `validation_crazing_images.txt` and `validation_rolled-in_scale_images.txt` — lists of selected validation images for analysis
-
-Use the CSV files as the source of truth for detailed comparisons and class-level analysis.
-
-## Requirements
-
-The project was developed in a Windows environment with Python 3.10 and a local NVIDIA GPU. The repository includes `requirements.txt`. A compatible NVIDIA driver and CUDA-enabled PyTorch installation are needed to use the GPU; CPU inference may be possible by changing the prediction device in the script.
-
-## Setup (Windows PowerShell)
-
-Open PowerShell in the project root.
-
-If the virtual environment already exists, activate it:
-
-```powershell
+``` powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-Install the project dependencies:
+### 3. Install dependencies
 
-```powershell
-python -m pip install -r requirements.txt
+``` powershell
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
-If dependencies are already installed and the environment works, do not reinstall them unnecessarily.
+For GPU inference, install a PyTorch and Torchvision build compatible
+with the machine's NVIDIA driver and CUDA environment. The appropriate
+CUDA-enabled installation can differ between machines.
 
-## Run a prediction
+### 4. Launch the application
 
-1. Place the image to inspect at the project root and name it `sample.jpg`, or update `IMAGE_PATH` in `src/predict.py`.
-2. Confirm that the selected checkpoint exists at `runs/detect/surfacescope_imgsz512-2/weights/best.pt`.
-3. Run:
+``` powershell
+streamlit run app.py
+```
 
-```powershell
+Open the local address printed in the terminal, usually
+`http://localhost:8501`. Upload a JPG, JPEG, or PNG steel surface image,
+adjust the confidence threshold, and select **Detect Defects**.
+
+### GPU and CPU behavior
+
+The application selects CUDA when PyTorch reports that a CUDA device is
+available. Otherwise, it uses CPU inference.
+
+Check the local GPU environment:
+
+``` powershell
+python -c "import torch; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')"
+```
+
+The project was tested locally with an NVIDIA GeForce RTX 3050 Laptop
+GPU with 4 GB of VRAM. Actual speed and memory usage depend on the
+device, software versions, image, and workload.
+
+## Run prediction from Python
+
+The standalone prediction script is `src/predict.py`. Run it from the
+repository root:
+
+``` powershell
 python .\src\predict.py
 ```
 
-The script loads the selected checkpoint, predicts at 512 × 512 with a confidence threshold of 0.25, prints detected class names, confidence scores and bounding-box coordinates, and saves annotated output under:
+The script uses the selected checkpoint at `models/best.pt` and the
+configured sample-image path. If it expects `sample.jpg`, place an
+appropriate test image in the project root or update the image path in
+the script.
 
-```text
-runs/inference/final_model/
+The script prints detected classes, confidence scores, and bounding-box
+coordinates, and saves annotated output under its configured inference
+output directory.
+
+## MLflow experiment tracking
+
+MLflow was used during local experimentation to record evaluation
+metrics and artifacts and to register the selected model.
+
+  Registry field     Recorded value
+  ------------------ ------------------------
+  Registered model   `SurfaceScope-YOLOv8n`
+  Version            `1`
+  Status             `READY`
+
+The local tracking database was `mlflow.db`, with experiment artifacts
+stored under `mlruns/`. These local files are excluded from GitHub.
+
+To open a locally available MLflow database from the project root:
+
+``` powershell
+mlflow ui --backend-store-uri "sqlite:///mlflow.db"
 ```
 
-To open the output folder:
+Then open the address printed in the terminal, commonly
+`http://127.0.0.1:5000`.
 
-```powershell
-explorer ".\runs\inference\final_model"
+A registered model version with status `READY` confirms registry
+creation. It does not, by itself, mean that MLflow model serving or a
+separate production inference endpoint has been deployed.
+
+## Streamlit Cloud deployment
+
+The public demonstration is hosted at:
+
+**https://surfacescope-ai.streamlit.app/**
+
+Deployment files:
+
+-   `app.py` --- Streamlit application entry point.
+-   `requirements.txt` --- Python dependencies.
+-   `packages.txt` --- Linux system packages required by the cloud
+    environment.
+-   `models/best.pt` --- selected trained checkpoint.
+
+The cloud application was configured with Python 3.12. The
+`packages.txt` file contains the Linux packages used to resolve the
+OpenCV `libGL.so.1` startup dependency:
+
+``` text
+libgl1
+libglib2.0-0
 ```
 
-If the script reports that the image is missing, put an image named `sample.jpg` in the project root or change `IMAGE_PATH` in `src/predict.py`. If the checkpoint is missing, check the selected model path above.
-
-## MLflow tracking and model registry
-
-The project has an MLflow tracking database at `mlflow.db`. The registered model is `SurfaceScope-YOLOv8n`, version 1, with status `READY`.
-
-Start the MLflow UI from the project root:
-
-```powershell
-mlflow ui --backend-store-uri "sqlite:///C:/Users/sharm/OneDrive/Desktop/SurfaceScopeAI/mlflow.db"
-```
-
-Then open the local address printed by MLflow in your browser (commonly `http://127.0.0.1:5000`).
-
-The tracking database and artifact paths are local to the development machine. If the project is moved to another computer, update the paths and verify that the required artifacts are available. A registered model version with status `READY` confirms registry creation; it does not, by itself, mean that a production inference service has been deployed.
-
-## Main project paths
-
-```text
-SurfaceScopeAI/
-├── data/
-│   └── processed/neu_yolo/
-├── reports/
-│   ├── model_comparison.csv
-│   ├── confidence_thresholds.csv
-│   └── difficult_class_error_analysis.csv
-├── runs/
-│   ├── detect/surfacescope_imgsz512-2/weights/best.pt
-│   └── inference/final_model/
-├── src/
-│   ├── predict.py
-│   ├── train.py
-│   ├── train_imgsz512.py
-│   └── evaluate_imgsz512.py
-├── mlflow.db
-├── requirements.txt
-└── README.md
-```
-
-This is a high-level overview; the local project may contain additional scripts, experiments and artifacts.
+**Hardware distinction:** Streamlit Community Cloud runs the public demo
+using its hosted environment and CPU inference. It does not use the
+NVIDIA RTX 3050 in the developer's laptop. Local execution can use the
+laptop GPU when CUDA is available. Hosted GPU inference would require a
+separately provisioned GPU-enabled service.
 
 ## Limitations
 
-- The reported metrics are based on the available validation split, not independent industrial deployment testing.
-- Some defect categories are harder to detect than others; consult the existing class-wise error-analysis reports.
-- Confidence scores reflect the model's predictions and are not a guarantee that a detected defect is real.
-- Performance may change with different lighting, cameras, steel textures, image resolutions and production conditions.
-- The current prediction script is a local demo, not a deployed production API or web application.
+-   Metrics are based on the prepared NEU-DET validation split, not an
+    independent industrial production test set.
+-   Detection quality differs across classes; crazing and rolled-in
+    scale were more challenging in the recorded class-wise evaluation.
+-   Confidence scores are model outputs, not calibrated probabilities or
+    guarantees that a defect is real.
+-   Lighting, camera characteristics, surface texture, image resolution,
+    and production conditions may affect performance.
+-   The public Streamlit demo is a demonstration application, not a
+    validated industrial inspection or safety-critical system.
+-   The public cloud deployment uses CPU inference; local GPU
+    performance should not be assumed for the hosted application.
+-   Dataset files and local MLflow tracking data are not included in the
+    repository.
 
 ## Future improvements
 
-Potential next steps, if the project is extended, include testing on independently collected industrial images, reviewing false positives and missed defects, calibrating confidence thresholds on a separate validation set, and packaging inference behind an application interface.
+-   Evaluate the model on independently collected industrial steel
+    images.
+-   Improve detection of challenging defect categories using additional
+    representative data.
+-   Review false positives and missed detections with domain experts.
+-   Calibrate confidence thresholds using a separate evaluation set.
+-   Add batch image processing and downloadable detection summaries.
+-   Add automated tests, application monitoring, and structured
+    inference logging.
+-   Use a dedicated GPU-enabled cloud service if hosted GPU inference is
+    required.
 
 ## Project status
 
-The selected model has been trained and evaluated, the model comparison and error-analysis reports exist, MLflow tracking and registration have been verified, and the local prediction script has successfully generated annotated output.
+**Implemented and publicly demonstrated.**
+
+-   YOLOv8n steel defect detector trained and evaluated on the prepared
+    NEU-DET dataset.
+-   Model comparison and difficult-class analysis reports generated.
+-   MLflow experiment tracking and model registration verified.
+-   Local CUDA inference verified on an NVIDIA RTX 3050 Laptop GPU.
+-   Interactive Streamlit application implemented and tested with
+    multiple images.
+-   Application deployed and tested on Streamlit Community Cloud.
+
+------------------------------------------------------------------------
+
+**SurfaceScope AI --- Intelligent Steel Surface Defect Detection**
+
+-   GitHub: https://github.com/sharmilasrinivas/SurfaceScope-AI
+-   Live demo: https://surfacescope-ai.streamlit.app/
