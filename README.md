@@ -61,32 +61,43 @@ covering six defect categories. The dataset itself is not included in
 this repository. Obtain it separately and configure the dataset paths
 before reproducing training.
 
-## Validation performance
 
-The selected 512-pixel model achieved these recorded validation results:
+## Validation Performance
 
-  Metric                   Score
-  ------------ -----------------
-  Precision      0.7270 (72.70%)
-  Recall         0.6828 (68.28%)
-  mAP@50         0.7340 (73.40%)
-  mAP@50--95     0.3849 (38.49%)
+The selected 512-pixel YOLOv8n model achieved the following validation results:
 
-### Class-wise validation results
+### Overall Validation Results
 
-  Defect class        Precision   Recall   mAP@50   mAP@50--95
-  ----------------- ----------- -------- -------- ------------
-  Crazing                 0.672    0.342    0.530        0.227
-  Inclusion               0.758    0.805    0.828        0.463
-  Patches                 0.861    0.891    0.926        0.576
-  Pitted surface          0.906    0.690    0.798        0.415
-  Rolled-in scale         0.578    0.492    0.516        0.227
-  Scratches               0.584    0.876    0.807        0.400
+| Evaluation Metric | Score | Percentage |
+|---|---:|---:|
+| Precision | 0.7270 | 72.70% |
+| Recall | 0.6828 | 68.28% |
+| mAP@50 | 0.7340 | 73.40% |
+| mAP@50–95 | 0.3849 | 38.49% |
 
-Performance varies across defect categories. Crazing and rolled-in scale
-were comparatively challenging in this validation evaluation. See the
-CSV reports in `reports/` for additional analysis. These metrics are not
-independent industrial test results.
+### Class-wise Validation Results
+
+| Defect Category | Precision | Recall | mAP@50 | mAP@50–95 |
+|---|---:|---:|---:|---:|
+| Crazing | 0.672 | 0.342 | 0.530 | 0.227 |
+| Inclusion | 0.758 | 0.805 | 0.828 | 0.463 |
+| Patches | 0.861 | 0.891 | 0.926 | 0.576 |
+| Pitted Surface | 0.906 | 0.690 | 0.798 | 0.415 |
+| Rolled-in Scale | 0.578 | 0.492 | 0.516 | 0.227 |
+| Scratches | 0.584 | 0.876 | 0.807 | 0.400 |
+
+### Performance Analysis
+
+- **Best-performing category:** Patches (mAP@50: 0.926).
+- **Highest precision:** Pitted Surface (0.906).
+- **Highest recall:** Patches (0.891).
+- **Challenging categories:** Crazing and Rolled-in Scale.
+
+The results indicate that model performance varies across defect categories. 
+Refer to the CSV reports in `reports/` for additional analysis.
+
+> **Note:** These metrics represent validation performance on the prepared NEU-DET validation dataset. They are not independent industrial test results.
+
 
 ## Application workflow
 
